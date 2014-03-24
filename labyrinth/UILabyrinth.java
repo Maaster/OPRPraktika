@@ -12,17 +12,17 @@ public class UILabyrinth extends JFrame {
     /**
      * Breite des Labyrinths.
      */
-    private static final int BREITE = 40;
+    private static final int BREITE = 50;
 
     /**
      * Höhe des Labyrinths.
      */
-    private static final int HOEHE = 30;
+    private static final int HOEHE = 40;
 
     /**
      * Pixel pro Rastereinheit des Labyrinths.
      */
-    private static final int PIXEL_PRO_RASTER = 10;
+    private static final int PIXEL_PRO_RASTER = 15;
 
     /**
      * Komponente zur Darstellung des Labyrinths.
