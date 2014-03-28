@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import labyrinth.util.Punkt;
+import util.Punkt;
 
 /**
  * Ein Objekt dieser Klasse stellt ein Labyrinth2 grafisch dar.
@@ -15,7 +15,7 @@ public class Labyrinthdarstellung extends JPanel {
     /**
      * Innenabstand der Darstellung vom Fensterrand.
      */
-    private static final int INNENABSTAND = 2;
+    private static final int INNENABSTAND = 5;
     
     /**
      * Pixel pro Rastereinheit des Labyrinths.
@@ -77,7 +77,6 @@ public class Labyrinthdarstellung extends JPanel {
                     getInsets().top + rastermass * startpunkt.gibY(),
                     getInsets().left + rastermass * zielpunkt.gibX(),
                     getInsets().top + rastermass * zielpunkt.gibY());
-            
         }
     }
 }

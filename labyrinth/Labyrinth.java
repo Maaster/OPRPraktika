@@ -1,16 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package labyrinth;
 
 import java.util.Random;
-import labyrinth.util.Punkt;
+import util.Punkt;
 
 /**
- *
- * @author Maaster
- */
+*
+* @author Maaster
+*/
 public class Labyrinth {
     
     private int breite;
@@ -18,12 +14,14 @@ public class Labyrinth {
     private int index;
     private int anzahlWandelemente;
     private Wandelement[] wandelemente;
+    private boolean[][] belegtePunkte;
     
     /**
-    * Mögliche Richtungen: Hoch(-1,0), Runter(1,0), Rechts(0,1), Links(0,-1)
+    * Mögliche Richtungen: Links(-1,0), Hoch(0,-1) Rechts(1,0), Runter(0,1), 
     */
-    private static final Punkt[] RICHTUNG = { new Punkt(-1, 0),
-                        new Punkt(0, -1),  new Punkt(1, 0), new Punkt(0, 1) };
+    private final Punkt[] RICHTUNG = { new Punkt(-1, 0),
+                        new Punkt(0, -1), new Punkt(1, 0), new Punkt(0, 1) };
+    
     
     public Labyrinth(int breite, int hoehe) {
         
@@ -31,7 +29,7 @@ public class Labyrinth {
         this.hoehe = hoehe;
         anzahlWandelemente = (breite + 1) * (hoehe + 1);
         wandelemente = new Wandelement[anzahlWandelemente];
-        
+        belegtePunkte = new boolean[breite + 1][hoehe + 1]; 
         index = 0;
         
         erzeugeWandelemente();
@@ -50,11 +48,11 @@ public class Labyrinth {
     }
     
     public Punkt gibStartpunkt(int index) {
-        return wandelemente[index].startpunkt;
+        return wandelemente[index].getStartpunkt();
     }
     
     public Punkt gibEndpunkt(int index) {
-        return wandelemente[index].endpunkt;
+        return wandelemente[index].getEndpunkt();
     }
     
     public void erzeugeWandelemente() {
@@ -70,22 +68,28 @@ public class Labyrinth {
         while(index < anzahlWandelemente) {
             
             //Zufälligen Endpunkt auswählen
-            aktuellerPunkt = wandelemente[rand.nextInt(index)].endpunkt;
+            aktuellerPunkt = wandelemente[rand.nextInt(index)].getEndpunkt();
             
             wandelemente[index] = new Wandelement();
             
             //Neuen Startpunkt setzen
-            wandelemente[index].startpunkt = aktuellerPunkt;
+            wandelemente[index].setStartpunkt(aktuellerPunkt);
             
-            //Neuen Endpunkt durch zufällige Richtungs-Addierung setzen und 
-            // testen, ob er gültig ist
+            belegtePunkte[aktuellerPunkt.gibX()][aktuellerPunkt.gibY()] = true;
+            
+            //Neuen Endpunkt durch zufällige Richtungs-Addierung setzen und
+            //testen, ob er gültig ist
             
             naechsterPunkt = aktuellerPunkt.addiere(RICHTUNG[rand.nextInt(4)]);
             
+            
             if(istGueltigerPunkt(naechsterPunkt))
             {
-                wandelemente[index].endpunkt = naechsterPunkt;
+                wandelemente[index].setEndpunkt(naechsterPunkt);
                                 
+                belegtePunkte[naechsterPunkt.gibX()]
+                        [naechsterPunkt.gibY()] = true;
+                
                 index++;
             }
         }
@@ -93,31 +97,60 @@ public class Labyrinth {
     
     public void erzeugeAussenwand() {
         
-        for(int i = 0; i <= breite; i++) {
+        for(int i = 0; i <= breite - 1; i++) {
             //Obere Seite
             wandelemente[index] = new Wandelement();
-            wandelemente[index].startpunkt = new Punkt(i, 0);
-            wandelemente[index].endpunkt = new Punkt(i, 0).addiere(RICHTUNG[2]);
+            wandelemente[index].setStartpunkt(new Punkt(i,0));
+            
+            wandelemente[index].setEndpunkt(
+                    new Punkt(i, 0).addiere(RICHTUNG[2]));
+            
+            belegtePunkte[wandelemente[index].getStartpunkt().gibX()]
+                    [wandelemente[index].getStartpunkt().gibY()] = true;
+            belegtePunkte[wandelemente[index].getEndpunkt().gibX()]
+                    [wandelemente[index].getEndpunkt().gibY()] = true;
+            
             index++;
             
             //Untere Seite
             wandelemente[index] = new Wandelement();
-            wandelemente[index].startpunkt = new Punkt(i, hoehe);
-            wandelemente[index].endpunkt = new Punkt(i, hoehe).addiere(RICHTUNG[2]);
+            wandelemente[index].setStartpunkt(new Punkt(i, hoehe));
+            wandelemente[index].setEndpunkt(
+                    new Punkt(i, hoehe).addiere(RICHTUNG[2]));
+            
+            belegtePunkte[wandelemente[index].getStartpunkt().gibX()]
+                    [wandelemente[index].getStartpunkt().gibY()] = true;
+            belegtePunkte[wandelemente[index].getEndpunkt().gibX()]
+                    [wandelemente[index].getEndpunkt().gibY()] = true;
+            
             index++;
         }
         
-        for(int i = 0; i <= hoehe; i++) {
+        for(int i = 0; i < hoehe; i++) {
             //Linke Seite
             wandelemente[index] = new Wandelement();
-            wandelemente[index].startpunkt = new Punkt(0, i);
-            wandelemente[index].endpunkt = new Punkt(0, i).addiere(RICHTUNG[1]);
+            wandelemente[index].setStartpunkt(new Punkt(0, i));
+            wandelemente[index].setEndpunkt(
+                    new Punkt(0, i).addiere(RICHTUNG[3]));
+            
+            belegtePunkte[wandelemente[index].getStartpunkt().gibX()]
+                    [wandelemente[index].getStartpunkt().gibY()] = true;
+            belegtePunkte[wandelemente[index].getEndpunkt().gibX()]
+                    [wandelemente[index].getEndpunkt().gibY()] = true;
+            
             index++;
             
             //Rechte Seite
             wandelemente[index] = new Wandelement();
-            wandelemente[index].startpunkt = new Punkt(breite, i);
-            wandelemente[index].endpunkt = new Punkt(breite, i).addiere(RICHTUNG[1]);
+            wandelemente[index].setStartpunkt(new Punkt(breite, i));
+            wandelemente[index].setEndpunkt(
+                    new Punkt(breite, i).addiere(RICHTUNG[3]));
+            
+            belegtePunkte[wandelemente[index].getStartpunkt().gibX()]
+                    [wandelemente[index].getStartpunkt().gibY()] = true;
+            belegtePunkte[wandelemente[index].getEndpunkt().gibX()]
+                    [wandelemente[index].getEndpunkt().gibY()] = true;
+            
             index++;
         }
     }
@@ -125,30 +158,17 @@ public class Labyrinth {
     public boolean istGueltigerPunkt(Punkt naechsterPunkt) {
         boolean istGueltig = true;
         
-//        if(naechsterPunkt.gibX() > breite)
-//            istGueltig = false;
-//        else if(naechsterPunkt.gibX() < 0)
-//            istGueltig = false;
-//        else if(naechsterPunkt.gibY() < 0)
-//            istGueltig = false;
-//        else if(naechsterPunkt.gibY() > hoehe)
-//            istGueltig = false;
+        //Check ob Wand ausserhalb ist
+        if(!naechsterPunkt.istInnerhalb(
+                    new Punkt(0,1), new Punkt(breite, hoehe)))
+            istGueltig = false;
         
-        if(!naechsterPunkt.istInnerhalb(new Punkt(0,0), new Punkt(breite, hoehe)))
+        //Check ob Wand bereits existiert 
+        //bzw ein geschlossener Raum gezogen wird
+        if(istGueltig &&
+                belegtePunkte[naechsterPunkt.gibX()][naechsterPunkt.gibY()])
             istGueltig = false;
             
-        
-        //Checken ob man doppelte Wände zieht oder geschlossene Räume zieht
-        for(int i = 0; i < index && istGueltig; i++) {
-            if((naechsterPunkt.gibX() == wandelemente[i].startpunkt.gibX()) 
-                    && (naechsterPunkt.gibY() == wandelemente[i].startpunkt.gibY()))
-                istGueltig = false;
-            
-            if((naechsterPunkt.gibX() == wandelemente[i].endpunkt.gibX()) 
-                    && (naechsterPunkt.gibY() == wandelemente[i].endpunkt.gibY()))
-                istGueltig = false;
-        }
-        
         return istGueltig;
     }
 }
