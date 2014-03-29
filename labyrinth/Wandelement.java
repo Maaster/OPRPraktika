@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package labyrinth;
 
-import util.Punkt;
+
 /**
  *
  * @author maaster
@@ -16,6 +10,9 @@ public class Wandelement {
     private Punkt startpunkt;
     private Punkt endpunkt;
     
+    /**
+     * Erstellt das Wandelement
+     */
     public Wandelement() {
         
     }
@@ -47,6 +44,4 @@ public class Wandelement {
     public void setEndpunkt(Punkt endpunkt) {
         this.endpunkt = endpunkt;
     }
-    
-    
 }

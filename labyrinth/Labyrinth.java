@@ -1,7 +1,6 @@
 package labyrinth;
 
 import java.util.Random;
-import util.Punkt;
 
 /**
 *
@@ -17,12 +16,17 @@ public class Labyrinth {
     private boolean[][] belegtePunkte;
     
     /**
-    * Mögliche Richtungen: Links(-1,0), Hoch(0,-1) Rechts(1,0), Runter(0,1), 
+    * Mögliche Richtungen: Links(-1,0), Hoch(0,-1),
+    * Rechts(1,0), Runter(0,1).
     */
-    private final Punkt[] RICHTUNG = { new Punkt(-1, 0),
+    private final Punkt[] RICHTUNG = {new Punkt(-1, 0),
                         new Punkt(0, -1), new Punkt(1, 0), new Punkt(0, 1) };
     
-    
+    /**
+     * Erstellt das Labyrinth mit der angegeben Breite und Höhe.
+     * @param breite Breite des Labyrinthes
+     * @param hoehe Länge des Labyrinthes
+     */
     public Labyrinth(int breite, int hoehe) {
         
         this.breite = breite;
@@ -35,26 +39,53 @@ public class Labyrinth {
         erzeugeWandelemente();
     }
     
+    /**
+     * Gibt die Höhe des Labyrinthes wieder.
+     * @return Höhe des Labyrinthes
+     */
     public int gibHoehe() {
         return hoehe;
     }
     
+    /**
+     * Gibt die Breite des Labyrinthes wieder.
+     * @return Breite des Labyrinthes
+     */
     public int gibBreite() {
         return breite;
     }
     
+    /**
+     * Gibt die Anzahl aller möglichen Wandelemente wieder.
+     * @return Anzahl aller möglichen Wandelemente
+     */
     public int gibAnzahlWandelemente() {
         return anzahlWandelemente;
     }
     
+    /**
+     * Gibt den Startpunkt des x-ten Wandelementes wieder, wobei x
+     * durch den übergebenen Parameter index definiert wird.
+     * @param index Wandelement, von dem Startpunkt gefordert wird
+     * @return Startpunkt des Wandelementes index
+     */
     public Punkt gibStartpunkt(int index) {
         return wandelemente[index].getStartpunkt();
     }
     
+    /**
+     * Gibt den Endpunkt des x-ten Wandelementes wieder, wobei x
+     * durch den übergebenen Parameter index definiert wird.
+     * @param index Wandelement, von dem Endpunkt gefordert wird
+     * @return Endpunkt des Wandelementes index
+     */
     public Punkt gibEndpunkt(int index) {
         return wandelemente[index].getEndpunkt();
     }
     
+    /**
+     * Erzeugt das Labyrinth.
+     */
     public void erzeugeWandelemente() {
         erzeugeAussenwand();
         
@@ -65,39 +96,45 @@ public class Labyrinth {
         Punkt naechsterPunkt;
         
         //Restliche Wandelemente erzeugen
-        while(index < anzahlWandelemente) {
+        while(index < anzahlWandelemente){
             
             //Zufälligen Endpunkt auswählen
             aktuellerPunkt = wandelemente[rand.nextInt(index)].getEndpunkt();
             
-            wandelemente[index] = new Wandelement();
-            
-            //Neuen Startpunkt setzen
-            wandelemente[index].setStartpunkt(aktuellerPunkt);
-            
-            belegtePunkte[aktuellerPunkt.gibX()][aktuellerPunkt.gibY()] = true;
-            
-            //Neuen Endpunkt durch zufällige Richtungs-Addierung setzen und
-            //testen, ob er gültig ist
-            
-            naechsterPunkt = aktuellerPunkt.addiere(RICHTUNG[rand.nextInt(4)]);
-            
-            
-            if(istGueltigerPunkt(naechsterPunkt))
-            {
-                wandelemente[index].setEndpunkt(naechsterPunkt);
-                                
-                belegtePunkte[naechsterPunkt.gibX()]
-                        [naechsterPunkt.gibY()] = true;
+                wandelemente[index] = new Wandelement();
+
+                //Neuen Startpunkt setzen
+                wandelemente[index].setStartpunkt(aktuellerPunkt);
+
+                belegtePunkte[aktuellerPunkt.gibX()][aktuellerPunkt.gibY()] = true;
+
+                //Neuen Endpunkt durch zufällige Richtungs-Addierung setzen und
+                //testen, ob er gültig ist
+
                 
-                index++;
-            }
+                naechsterPunkt = aktuellerPunkt.addiere
+                                            (RICHTUNG[rand.nextInt(4)]);
+
+                //Falls gültig
+                if(istGueltigerPunkt(naechsterPunkt)){
+                    //Endpunkt setzen
+                    wandelemente[index].setEndpunkt(naechsterPunkt);
+
+                    //Als belegt setzen
+                    belegtePunkte[naechsterPunkt.gibX()]
+                            [naechsterPunkt.gibY()] = true;
+
+                    index++;
+                }
         }
     }
     
+    /**
+     * Erzeugt die Aussenwand des Labyrinthes.
+     */
     public void erzeugeAussenwand() {
         
-        for(int i = 0; i <= breite - 1; i++) {
+        for(int i = 0; i <= breite - 1; i++){
             //Obere Seite
             wandelemente[index] = new Wandelement();
             wandelemente[index].setStartpunkt(new Punkt(i,0));
@@ -126,7 +163,7 @@ public class Labyrinth {
             index++;
         }
         
-        for(int i = 0; i < hoehe; i++) {
+        for(int i = 0; i < hoehe; i++){
             //Linke Seite
             wandelemente[index] = new Wandelement();
             wandelemente[index].setStartpunkt(new Punkt(0, i));
@@ -155,20 +192,30 @@ public class Labyrinth {
         }
     }
     
+    /**
+     * Überprüft, ob der angegebene Punkt gültig ist, das heisst
+     * ob er innerhalb des Labyrinthes liegt und noch nicht belegt ist.
+     * @param naechsterPunkt Der zu überprüfende Punkt
+     * @return true genau dann, wenn Punkt innerhalb des Labyrinthes
+     * ist und noch nicht belegt ist
+     */
     public boolean istGueltigerPunkt(Punkt naechsterPunkt) {
         boolean istGueltig = true;
         
         //Check ob Wand ausserhalb ist
         if(!naechsterPunkt.istInnerhalb(
-                    new Punkt(0,1), new Punkt(breite, hoehe)))
+                    new Punkt(0,1),new Punkt(breite, hoehe))){
             istGueltig = false;
-        
+        }
+            
         //Check ob Wand bereits existiert 
         //bzw ein geschlossener Raum gezogen wird
-        if(istGueltig &&
-                belegtePunkte[naechsterPunkt.gibX()][naechsterPunkt.gibY()])
+        if(istGueltig 
+            && belegtePunkte[naechsterPunkt.gibX()][naechsterPunkt.gibY()]) {
             istGueltig = false;
-            
+        }
+        
         return istGueltig;
     }
 }
+

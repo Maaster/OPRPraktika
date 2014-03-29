@@ -1,4 +1,4 @@
-package util;
+package labyrinth;
 
 /**
  * Ein Objekt dieser Klasse stellt einen Punkt in einer zweidimensionalen

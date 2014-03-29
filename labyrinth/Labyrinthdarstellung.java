@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import util.Punkt;
 
 /**
  * Ein Objekt dieser Klasse stellt ein Labyrinth2 grafisch dar.
