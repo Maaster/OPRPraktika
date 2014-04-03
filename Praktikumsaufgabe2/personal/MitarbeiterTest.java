@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Praktikumsaufgabe2;
+package personal;
 
 /**
  *
@@ -44,5 +44,6 @@ public class MitarbeiterTest {
         System.out.println(walter.gibHierarchie());
         System.out.println(willi.gibInfo());
         System.out.println(willi.gibHierarchie());
+        
     }
 }
