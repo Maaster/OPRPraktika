@@ -68,14 +68,14 @@ public class Mitarbeiter {
     /**
      * Setzt einen neuen Vorgesetzten, falls keine angegeben wurde
      * wird der Mitarbeiter ein freier Mitarbeiter.
-     * @param neuerVorgesetzter
+     * @param neuerVorgesetzter der neue Vorgesetzte oder null.
      */
     public void setzeVorgesetzten(Vorgesetzter neuerVorgesetzter) {
 
         if (neuerVorgesetzter != null) {
             vorgesetzten = neuerVorgesetzter;
             if (rang.equals("freier Mitarbeiter")) {
-            rang = "Mitarbeiter";
+                rang = "Mitarbeiter";
             }
         } else {
             vorgesetzten = null;
@@ -104,9 +104,9 @@ public class Mitarbeiter {
         String infoText;
 
         if (rang.equals("freier Mitarbeiter")) {
-                infoText = "Ich bin freier Mitarbeiter, Name " + name
-                            + ". Mein Bestelllimit ist "
-                                + bestelllimit + " EUR.";
+            infoText = "Ich bin freier Mitarbeiter, Name " + name
+                        + ". Mein Bestelllimit ist "
+                            + bestelllimit + " EUR.";
         } else if (rang.equals("Mitarbeiter")) {
             infoText = "Ich bin Mitarbeiter" + ", Name " + name
                         + ". Mein Vorgesetzter ist " + vorgesetzten.gibName()
