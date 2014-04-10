@@ -12,6 +12,11 @@ public class Mitarbeiter {
     private static int bestelllimit = 20;
 
     /**
+     * Bestelllimit für diesen Vorgesetzten.
+     */
+    private int bestelllimitVorgesetzter;
+
+    /**
      * Name des Mitarbeiters.
      */
     private String name;
@@ -33,6 +38,7 @@ public class Mitarbeiter {
     public Mitarbeiter(String name) {
         this.name = name;
         rang = "freier Mitarbeiter";
+        this.bestelllimitVorgesetzter = -1;
     }
 
     /**
@@ -43,6 +49,14 @@ public class Mitarbeiter {
         bestelllimit = limit;
     }
 
+    /**
+     * Setzt das Bestelllimit dieses Vorgesetzten.
+     * @param limit Neues Limit
+     */
+    public void setzeBestelllimit(int limit) {
+        this.bestelllimitVorgesetzter = limit;
+    }
+    
     /**
      * Gibt den Vorgesetzten dieses Mitarbeiters wieder.
      * @return Vorgesetzten des Mitarbeiters
@@ -79,7 +93,7 @@ public class Mitarbeiter {
      * @return true genau dann, wenn der Mitarbeiter bestellen darf
      */
     public boolean darfBestellen(int kosten) {
-        return kosten <= bestelllimit;
+        return kosten <= this.gibLimit();
     }
 
     /**
@@ -89,15 +103,25 @@ public class Mitarbeiter {
     public String gibInfo() {
         String infoText;
 
-        if (vorgesetzten == null) {
+        if (rang.equals("freier Mitarbeiter")) {
                 infoText = "Ich bin freier Mitarbeiter, Name " + name
                             + ". Mein Bestelllimit ist "
                                 + bestelllimit + " EUR.";
-        } else {
-            infoText = "Ich bin Mitarbeiter " + ", Name " + name
+        } else if (rang.equals("Mitarbeiter")) {
+            infoText = "Ich bin Mitarbeiter" + ", Name " + name
                         + ". Mein Vorgesetzter ist " + vorgesetzten.gibName()
                             + ". Mein Bestelllimit ist "
                                 + bestelllimit + " EUR.";
+        } else if (vorgesetzten == null && rang.equals("Vorgesetzter")) {
+            infoText = "Ich bin Vorgesetzter, Name " + this.gibName()
+                            + ". Mein Bestelllimit ist "
+                                + this.gibLimit() + " EUR.";
+        } else {
+            infoText = "Ich bin Vorgesetzter, Name " + this.gibName()
+                            + ". Mein Vorgesetzter ist "
+                                + this.gibVorgesetzten().gibName()
+                                    + ". Mein Bestelllimit ist "
+                                        + this.gibLimit() + " EUR.";
         }
 
         return infoText;
@@ -129,12 +153,16 @@ public class Mitarbeiter {
     public void setzeRang(String neuerRang) {
         this.rang = neuerRang;
     }
-    
+
     /**
      * Gibt das Bestelllimit wieder.
      * @return Bestelllimit
      */
-    public static int gibLimit() {
-        return bestelllimit;
+    public int gibLimit() {
+        return (rang.equals("Mitarbeiter"))
+                ? bestelllimit
+                : (bestelllimitVorgesetzter < 0)
+                    ? bestelllimit
+                    : bestelllimitVorgesetzter;
     }
 }
