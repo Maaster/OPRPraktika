@@ -74,12 +74,12 @@ public class Mitarbeiter {
 
         if (neuerVorgesetzter != null) {
             vorgesetzten = neuerVorgesetzter;
-            if (rang.equals("freier Mitarbeiter")) {
+            if ("freier Mitarbeiter".equals(rang)) {
                 rang = "Mitarbeiter";
             }
         } else {
             vorgesetzten = null;
-            if (rang.equals("Mitarbeiter")) {
+            if ("Mitarbeiter".equals(rang)) {
                 rang = "freier Mitarbeiter";
             }
         }
@@ -103,16 +103,16 @@ public class Mitarbeiter {
     public String gibInfo() {
         String infoText;
 
-        if (rang.equals("freier Mitarbeiter")) {
+        if ("freier Mitarbeiter".equals(rang)) {
             infoText = "Ich bin freier Mitarbeiter, Name " + name
                         + ". Mein Bestelllimit ist "
                             + bestelllimit + " EUR.";
-        } else if (rang.equals("Mitarbeiter")) {
+        } else if ("Mitarbeiter".equals(rang)) {
             infoText = "Ich bin Mitarbeiter" + ", Name " + name
                         + ". Mein Vorgesetzter ist " + vorgesetzten.gibName()
                             + ". Mein Bestelllimit ist "
                                 + bestelllimit + " EUR.";
-        } else if (vorgesetzten == null && rang.equals("Vorgesetzter")) {
+        } else if (vorgesetzten == null && "Vorgesetzter".equals(rang)) {
             infoText = "Ich bin Vorgesetzter, Name " + this.gibName()
                             + ". Mein Bestelllimit ist "
                                 + this.gibLimit() + " EUR.";
