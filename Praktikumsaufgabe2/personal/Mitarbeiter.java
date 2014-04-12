@@ -159,7 +159,7 @@ public class Mitarbeiter {
      * @return Bestelllimit
      */
     public int gibLimit() {
-        return (rang.equals("Mitarbeiter"))
+        return ("Mitarbeiter".equals(rang))
                 ? bestelllimit
                 : (bestelllimitVorgesetzter < 0)
                     ? bestelllimit
