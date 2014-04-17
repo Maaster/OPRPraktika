@@ -10,6 +10,11 @@ package ausdruck;
  */
 public class Parser {
     
+    /**
+     * Parsed den angegeben Ausdruck in einen Baum.
+     * @param term Term, der zu parsen ist
+     * @return Ausdruck, in Baum-Form.
+     */
     public Ausdruck parse(String term) {
         return null;
     }
