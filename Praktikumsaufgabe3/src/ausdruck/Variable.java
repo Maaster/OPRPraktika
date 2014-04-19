@@ -36,6 +36,6 @@ public class Variable extends Ausdruck {
      */
     @Override
     public boolean equals(Object obj) {
-        return this == obj;
+        return this == (Variable) obj;
     }
 }

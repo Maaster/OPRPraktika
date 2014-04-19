@@ -38,6 +38,6 @@ public class OperatorAusdruck extends Ausdruck {
      */
     @Override
     public boolean equals(Object obj) {
-        return true;
+        return this == (OperatorAusdruck) obj;
     }
 }
