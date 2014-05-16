@@ -67,7 +67,7 @@ public class AusdruckTest {
         sollAusdruck = new OperatorAusdruck(
                 new Variable("c"),
                 '+',
-                new Konstante(10));
+                new Konstante(25));
 
         Assert.assertEquals(35, sollAusdruck.gibWert(belegung));
 
@@ -146,5 +146,68 @@ public class AusdruckTest {
                 new Variable("d"));
         
         Assert.assertEquals(200, sollAusdruck.gibWert(belegung));
+        
+        // 10
+        belegung.belege("c", 10);
+
+        sollAusdruck = new Konstante(10);
+
+        Assert.assertEquals(10, sollAusdruck.gibWert(belegung));
+        
+        // 7 + i
+        belegung.belege("i", 3);
+
+        sollAusdruck = new OperatorAusdruck(
+                new Konstante(7),
+                '+',
+                new Variable("i"));
+
+        Assert.assertEquals(10, sollAusdruck.gibWert(belegung));
+        
+        // (i + 18) / 2
+        belegung.belege("i", 3);
+
+        sollAusdruck = new OperatorAusdruck(
+                        new OperatorAusdruck(
+                            new Variable("i"),
+                            '+', 
+                            new Konstante(18)),
+                        '/',
+                        new Konstante(2));
+
+        Assert.assertEquals(10, sollAusdruck.gibWert(belegung));
+        
+        //1 + 2 * (i + 2 * k - 1) / 2 + j
+        
+        belegung.belege("i", 3);
+        belegung.belege("k", 4);
+        belegung.belege("j", 9);
+        
+        sollAusdruck = new OperatorAusdruck(
+                        new OperatorAusdruck(
+                            new Konstante(1)
+                            , '+'
+                            , new OperatorAusdruck(
+                                new Konstante(2)
+                                , '*'
+                                , new OperatorAusdruck(
+                                    new OperatorAusdruck(
+                                        new OperatorAusdruck(
+                                            new OperatorAusdruck(
+                                                new Konstante(2)
+                                                , '*'
+                                                , new Variable("k"))
+                                            , '-'
+                                            , new Konstante(1))
+                                        , '+'
+                                        , new Variable("i"))
+                                    , '/'
+                                    , new Konstante(2))
+                            )
+            )
+                        , '+'
+                        , new Variable("j"));
+
+        Assert.assertEquals(20, sollAusdruck.gibWert(belegung));
     }
 }

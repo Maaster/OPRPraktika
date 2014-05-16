@@ -10,6 +10,7 @@ package ausdruck;
  */
 public class OperatorAusdruck extends Ausdruck {
     
+    private int ergebnis;
     private Ausdruck linkeSeite;
     private Ausdruck rechteSeite;
     private char operator;
@@ -34,8 +35,6 @@ public class OperatorAusdruck extends Ausdruck {
     @Override
     public int gibWert(Variablenbelegung belegung) {
         
-        int ergebnis;
-        
         if (operator == '+') {
             ergebnis = linkeSeite.gibWert(belegung) + rechteSeite.gibWert(belegung);
         } else if (operator == '-') {
@@ -48,6 +47,16 @@ public class OperatorAusdruck extends Ausdruck {
         return ergebnis;
     }
     
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + this.ergebnis;
+        hash = 71 * hash + (this.linkeSeite != null ? this.linkeSeite.hashCode() : 0);
+        hash = 71 * hash + this.operator;
+        hash = 71 * hash + (this.rechteSeite != null ? this.rechteSeite.hashCode() : 0);
+        return hash;
+    }
+    
     /**
      * Überprüft, ob das übergeben Objekt das gleiche ist, wie das aktuelle.
      * @param obj das zu prüfende Objekt
@@ -56,6 +65,31 @@ public class OperatorAusdruck extends Ausdruck {
      */
     @Override
     public boolean equals(Object obj) {
-        return this == (OperatorAusdruck) obj;
+        boolean sindGleich = true;
+        
+        
+        if (obj == null) {
+            sindGleich = false;
+        }
+        if (getClass() != obj.getClass()) {
+            sindGleich = false;
+        }
+        
+        final OperatorAusdruck other = (OperatorAusdruck) obj;
+        
+        if (this.ergebnis != other.ergebnis) {
+            sindGleich = false;
+        }
+        if (this.linkeSeite != other.linkeSeite && (this.linkeSeite == null || !this.linkeSeite.equals(other.linkeSeite))) {
+            sindGleich = false;
+        }
+        if (this.operator != other.operator) {
+            sindGleich = false;
+        }
+        if (this.rechteSeite != other.rechteSeite && (this.rechteSeite == null || !this.rechteSeite.equals(other.rechteSeite))) {
+            sindGleich = false;
+        }
+        
+        return sindGleich;
     }
 }

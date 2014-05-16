@@ -38,6 +38,30 @@ public class Variable extends Ausdruck {
      */
     @Override
     public boolean equals(Object obj) {
-        return this == (Variable) obj;
+        boolean sindGleich = true;
+        
+        if (obj == null) {
+            sindGleich = false;
+        }
+        if (getClass() != obj.getClass()) {
+            sindGleich = false;
+        }
+        
+        final Variable other = (Variable) obj;
+        
+        if ((this.variable == null)
+                ? (other.variable != null)
+                : !this.variable.equals(other.variable)) {
+            sindGleich = false;
+        }
+        
+        return sindGleich;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 83 * hash + (this.variable != null ? this.variable.hashCode() : 0);
+        return hash;
     }
 }

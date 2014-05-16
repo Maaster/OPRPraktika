@@ -38,6 +38,28 @@ public class Konstante extends Ausdruck {
      */
     @Override
     public boolean equals(Object obj) {
-        return this == (Konstante) obj;
+        boolean sindGleich = true;
+        
+        if (obj == null) {
+            sindGleich = false;
+        }
+        if (getClass() != obj.getClass()) {
+            sindGleich = false;
+        }
+        
+        final Konstante other = (Konstante) obj;
+        
+        if (this.wert != other.wert) {
+            sindGleich = false;    
+        }
+        
+        return sindGleich;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 43 * hash + this.wert;
+        return hash;
     }
 }
