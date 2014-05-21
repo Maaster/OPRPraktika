@@ -6,11 +6,9 @@
 
 package bytefolge;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Set;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashSet;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -24,48 +22,94 @@ import org.junit.Test;
  */
 public class TextfinderTest {
     
-    FileInputStream bla;
-    Textfinder blaa;
+    /**
+     * InputStream.
+     */
+    private String stream;
     
+    /**
+     * Texte.
+     */
+    private Textfinder text3;
+    
+    /**
+     * Texte.
+     */
+    private Textfinder text4;
+    
+    /**
+     * Texte.
+     */
+    private Textfinder text5;
+    
+    /**
+     * Woerter, SollErgebnis.
+     */
+    private HashSet<String> woerter;
+ 
+    
+    /**
+     * Neuer Textfinder.
+     */
     public TextfinderTest() {
     }
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+    /**
+     * Test-Setup.
+     * @throws IOException 
+     */
     @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+    public void setUp() throws IOException {
+        stream = "H>-p>Chd>(9&i@g0P6=X,(cb0E(eh9#Chd";
+        text3 = new Textfinder(new ByteArrayInputStream(stream.getBytes()), 3);
+        text4 = new Textfinder(new ByteArrayInputStream(stream.getBytes()), 4);
+        text5 = new Textfinder(new ByteArrayInputStream(stream.getBytes()), 5);
     }
 
     /**
      * Test of gibWoerter method, of class Textfinder.
+     * @throws java.lang.Exception Ausnahme.
      */
     @Test
     public void testGibWoerter() throws Exception {
-        File datei = new File("C:\\Users\\Maaster\\Documents\\NetBeansProjects\\OPR6\\src\\bytefolge\\test.txt");
         
-        bla = new FileInputStream(datei);
-        blaa = new Textfinder(bla, 2);
+        woerter = new HashSet<>();
+        woerter.add("g0P6");
+        woerter.add("Chd");
+        woerter.add("cb0E");
+        woerter.add("eh9");
+       
+ 
+        assertEquals(woerter, text3.gibWoerter());
+ 
+        woerter = new HashSet<>();
+        woerter.add("g0P6");
+        woerter.add("cb0E");
+        assertEquals(woerter, text4.gibWoerter());
+ 
+        woerter = new HashSet<>();
+        assertEquals(woerter, text5.gibWoerter());
         
-        System.out.println(blaa.gibHaeufigkeit("Hallo"));
         
     }
 
     /**
      * Test of gibHaeufigkeit method, of class Textfinder.
+     * @throws java.lang.Exception Ausnahme.
      */
     @Test
     public void testGibHaeufigkeit() throws Exception {
-        
+//        assertEquals(2, text3.gibHaeufigkeit("Chd"));
+//        assertEquals(0, text3.gibHaeufigkeit("hf2z"));
+//        assertEquals(1, text3.gibHaeufigkeit("cb0E"));
+ 
+       
+        assertEquals(1, text4.gibHaeufigkeit("g0P6"));
+        assertEquals(1, text4.gibHaeufigkeit("cb0E"));
+        assertEquals(0, text4.gibHaeufigkeit(".,mnadfk4kjb4"));
+ 
+        assertEquals(0, text5.gibHaeufigkeit("hf2z"));
+        assertEquals(0, text5.gibHaeufigkeit("cb0E"));
     }
     
 }

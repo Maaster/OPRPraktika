@@ -7,12 +7,10 @@
 package bytefolge;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -36,17 +34,68 @@ public class Textfinder {
      */
     private int aktuellesZeichen;
     
+    /**
+     * HashMap der Wörter.
+     */
+    private HashMap<String, Integer> woerter;
+    
      
      
     /**
      * Erstellt einen neuen Textfinder.
      * @param datenquelle Datenquelle, aus der gelesen werden soll
      * @param laenge Mindestlänge der Wörter
+     * @throws java.io.IOException IO-Exception.
      */
-    public Textfinder(InputStream datenquelle, int laenge) {
+    public Textfinder(InputStream datenquelle, int laenge) throws IOException {
         mindestlaenge = laenge;
         this.datenquelle = new BufferedReader(
                             new InputStreamReader(datenquelle));
+        
+        woerter = new HashMap();
+        
+        String wort = "";
+        
+        int anzahlWoerter = 0;
+        
+        char aktuellerChar;
+        
+        if (mindestlaenge > 0) {
+            
+            aktuellesZeichen = datenquelle.read();
+            
+            while (aktuellesZeichen != -1) {
+                
+                aktuellerChar = (char) aktuellesZeichen;
+                
+                if (Character.isLetter(aktuellerChar)) {
+                    
+                    wort = wort + aktuellerChar;
+                    
+                    aktuellerChar = (char) datenquelle.read();
+                    
+                    while (Character.isLetterOrDigit(aktuellerChar)) {
+                        
+                        wort = wort + aktuellerChar;
+                        
+                        aktuellerChar = (char) datenquelle.read();
+                    }
+                    
+                    if (wort.length() >= mindestlaenge) {
+                        if (woerter.containsKey(wort)) {
+                            anzahlWoerter = woerter.get(wort);
+                            woerter.put(wort, anzahlWoerter + 1);
+                        } else {
+                            woerter.put(wort, 1);
+                        }
+                    }
+                        
+                    wort = "";
+                }
+            
+                aktuellesZeichen = datenquelle.read();
+            }
+        }
     }
     
     /**
@@ -57,46 +106,8 @@ public class Textfinder {
      * @throws IOException InputOutput-Exception
      */
     public Set gibWoerter() throws IOException {
-        HashSet<String> woerter = new HashSet();
         
-        String wort = "";
-        
-        char aktuellerChar;
-        
-        if (mindestlaenge > 0) {
-            
-            aktuellesZeichen = datenquelle.read();
-            
-            while ((aktuellesZeichen = datenquelle.read()) != -1) {
-                
-                aktuellerChar = (char) aktuellesZeichen;
-                
-                if (Character.isLetter(aktuellerChar)) {
-                    
-                    wort = wort + aktuellerChar;
-                    
-                    aktuellerChar = (char) datenquelle.read();
-                    
-                    while (Character.isLetter(aktuellerChar) 
-                            || Character.isDigit(aktuellerChar)) {
-                        
-                        wort = wort + aktuellerChar;
-                        
-                        aktuellerChar = (char) datenquelle.read();
-                    }
-                    
-                    if (wort.length() >= mindestlaenge) {
-                        woerter.add(wort);
-                    }
-                        
-                    wort = "";
-                }
-            
-                aktuellesZeichen = datenquelle.read();
-            }
-        }
-        
-        return woerter;
+        return woerter.keySet();
     }
     
     /**
@@ -108,39 +119,11 @@ public class Textfinder {
     public int gibHaeufigkeit(String wort) throws IOException {
         int ergebnis = 0;
         
-        String aktuellesWort = "";
-        
-        char aktuellerChar;
-        
-        aktuellesZeichen = datenquelle.read();
-            
-        while (aktuellesZeichen != -1) {
-
-            aktuellerChar = (char) aktuellesZeichen;
-
-            if (Character.isLetter(aktuellerChar)) {
-
-                aktuellesWort = aktuellesWort + aktuellerChar;
-
-                aktuellerChar = (char) datenquelle.read();
-
-                while (Character.isLetter(aktuellerChar) 
-                        || Character.isDigit(aktuellerChar)) {
-
-                    aktuellesWort = aktuellesWort + aktuellerChar;
-
-                    aktuellerChar = (char) datenquelle.read();
-                }
-
-                if (wort.equals(aktuellesWort)) {
-                    ergebnis++;
-                }
-                
-                aktuellesWort = "";
-            }
-            aktuellesZeichen = datenquelle.read();
+        if(woerter.containsKey(wort)) {
+            ergebnis = woerter.get(wort);
         }
         
         return ergebnis;
     }
 }
+
